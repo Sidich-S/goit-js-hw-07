@@ -3,47 +3,42 @@ import { galleryItems } from './gallery-items.js';
 
 console.log(galleryItems);
 
-// const galleryRef = document.querySelector('.gallery')
-// const makeGallery = galleryItems => {
+// ------------------------------------------------------------
+const galleryRef = document.querySelector(".gallery")
 
-//     return galleryItems.map(item => {
-//         const galleryItem = document.createElement('div');
-//         galleryItem.classList.add('gallery__item');
+class galleryImg {
+  constructor(galleryItems) {
+    this.galleryItems = galleryItems
+  }
 
-//         const galleryLink = document.createElement('a');
-//         galleryLink.href = (item.original);
-//         galleryItem.appendChild(galleryLink);
+  onGalleryRef() {
+    console.log(this.galleryItems);
+    const { preview, original, description } = this.galleryItems;
+    const galleryObj = this.galleryItems.map(({ preview, original, description }) =>
+      `<a class = "gallery__item" href = "${original}">
+   <img class ="gallery__image" src = "${preview}" alt = "${description}" />
+   </a>`).join("")
+    return galleryObj
+  }
 
-//         const galleryImg = document.createElement('img');
-//         galleryImg.classList.add('gallery__image');
-//         galleryImg.src = (item.preview);
-//         galleryImg.alt = (item.description);
-//         galleryImg.getAttribute = ('data-source', item.original);
-//         galleryLink.appendChild(galleryImg);
-
-//         galleryRef.append(galleryItem);
-//         return galleryItem
-//     });
-// }
-
-// console.log(basicLightbox);
-// makeGallery(galleryItems);
-
-const galleryRef = document.querySelector(".gallery");
-const lineGallery =  makeGallery(galleryItems);
-
-
-galleryRef.insertAdjacentHTML("afterbegin", lineGallery);
-
-function  makeGallery(galleryItems) {
-	return galleryItems
-		.map(({ preview, original, description }) => {
-			return `<li>
-                <a class="gallery__item" href="${original}">
-                  <img class="gallery__image" src="${preview}" alt="${description}"/>
-                </a>
-              </li>`;
-    }).join("");
+  onGallery(elem) {
+    elem.insertAdjacentHTML("beforeend", this.onGalleryRef())
+  }
 }
- 
-    const lightbox = new simpleLightbox(".gallery a", { captionsData: "alt", captionDelay: 250, });
+
+// ---------------------------------------------------------------------
+
+const otherGallery = new galleryImg(galleryItems);
+console.log(otherGallery.onGallery(galleryRef))
+
+galleryRef.addEventListener("click", onClickImgMakeGallery)
+
+function onClickImgMakeGallery(event) {
+  event.preventDefault();
+  if (event.target.nodeName !== "IMG") {
+    return
+  }
+}
+
+let gallery = new SimpleLightbox('.gallery a', {captionsData:"alt", captionDelay: 250});
+gallery.on('show.simplelightbox')
